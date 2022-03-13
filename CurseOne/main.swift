@@ -51,7 +51,7 @@ class sportCar: Car{
         }
     }
 }
-let gazel = trunkCar(brand: "Lamborgini", release: 2033, trunk: .trunkIsFull)
-gazel.trunkState()
-let mitsubisi = sportCar(brand: "Lada", release: 2001, goFast: .start)
-mitsubisi.engineState()
+let lamborgini = trunkCar(brand: "Lamborgini", release: 2033, trunk: .trunkIsFull)
+lamborgini.trunkState()
+let lada = sportCar(brand: "Lada", release: 2001, goFast: .start)
+lada.engineState()
