@@ -2,68 +2,54 @@
 //  main.swift
 //  CurseOne
 //
-//  Created by admin on 23.02.22.
+//  Created by admin on 23.03.22.
 //
 
 import Foundation
 
-enum windows{
-    case open
-    case closed
-}
-enum engine{
-    case start
-    case off
-}
-enum gas{
-    case gasOn
-    case gasOff
-}
-enum trunk{
-    case trunkIsFull
-    case TrunkIsEmpty
-}
-protocol Car {
-    var brand: String {get}
-    var release: Int {get}
-    var engineState: engine {get set}
-    var windowsState: windows {get set}
-}
-extension Car {
-    mutating func changeEngineState(engineState: engine){
-        self.engineState = engineState
+struct Queue<T> {
+    var internalArray = [T]()
+    var count: Int{
+        return internalArray.count
     }
-    mutating func chageWindowsState(windowsState: windows){
-        self.windowsState = windowsState
+    mutating func add(_ item: T){
+        internalArray.append(item)
     }
-}
-class basicCar: Car{
-    var brand: String
-    var release: Int
-    var engineState: engine = .off
-    var windowsState: windows = .closed
-    init(brand: String, release: Int) {
-        self.brand = brand
-        self.release = release
+    mutating func add(_ item: [T]){
+        self.internalArray.append(contentsOf: item)
+    }
+    mutating func remove() -> T?{
+        if internalArray.count > 0 {
+            return internalArray.removeFirst()
+        } else {
+            return nil
+        }
+    }
+    
+    public func filter(array: [T], predicateSomeClosure: (T) -> Bool) -> [T]{
+        var tmpArray = [T]()
+        for element in array{
+            if predicateSomeClosure(element){
+                tmpArray.append(element)
+            }
+        }
+        return tmpArray
+    }
+    
+    subscript(index: Int) -> T?{
+        if index > internalArray.count || index < 0{
+            return nil
+        }else{
+            return internalArray[index]
+        }
     }
 }
-class sportCar: basicCar, CustomStringConvertible{
-    var gasState: gas = .gasOff
-    var description: String{
-        return "engine is \(engineState), windows is \(windowsState), gas is \(gasState), release date is \(release)"
-    }
+var queue = Queue<Int>()
+queue.add([10,20,30,40,50,60,70,80,90])
+print(queue)
+let filterQueue = queue.filter(array: queue.internalArray) {(i: Int) -> Bool in
+    return i % 2 == 1
 }
-class trunkCar: basicCar, CustomStringConvertible{
-    var trunkState: trunk = .TrunkIsEmpty
-    var description: String{
-        return "engine is \(engineState), windows is \(windowsState), trunk is \(trunkState), release date is \(release)"
-    }
-}
-var lamborigni = sportCar(brand: "Lamborgini", release: 2033)
-var lada = trunkCar(brand: "Lada", release: 2001)
-lamborigni.changeEngineState(engineState: .start)
-lamborigni.gasState = .gasOn
-lada.chageWindowsState(windowsState: .open)
-lada.trunkState = .trunkIsFull
-print(lamborigni.description)
-print(lada.description)
+print(filterQueue)
+
+
